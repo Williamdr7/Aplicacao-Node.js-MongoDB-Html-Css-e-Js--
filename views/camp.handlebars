@@ -1,0 +1,42 @@
+<div class = "tudo">
+<div class = "camp1">
+    <hr>
+    <hr>
+    <hr>
+    <hr>
+    <hr>
+    <div class = "inside1">
+    <img src="/images/fortnite-keyart-1080p_mhec.jpg" width="720" height="400px" alt="">
+    <p>Campeonato Arena Cincão</p>
+    <div id="paypal-button-container"></div>
+<script src="https://www.paypal.com/sdk/js?client-id=sb&currency=BRL" data-sdk-integration-source="button-factory"></script>
+<script>
+  paypal.Buttons({
+      style: {
+          shape: 'pill',
+          color: 'gold',
+          layout: 'vertical',
+          label: 'buynow',
+          
+      },
+      createOrder: function(data, actions) {
+          return actions.order.create({
+              purchase_units: [{
+                  amount: {
+                      value: '5'
+                  }
+              }]
+          });
+      },
+      onApprove: function(data, actions) {
+          return actions.order.capture().then(function(details) {
+              alert('Transaction completed by ' + details.payer.name.given_name + '!');
+          });
+      }
+  }).render('#paypal-button-container');
+</script>
+    
+    </div>
+
+</div>
+</div>

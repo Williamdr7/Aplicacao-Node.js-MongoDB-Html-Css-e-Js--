@@ -1,0 +1,25 @@
+{{#each erros}}
+<div class="alert alert-danger">{{texto}}</div>
+
+{{else}}
+
+{{/each}}
+
+<body>
+    <div="page1">
+        <div class="container1">
+            <h1> Cadastro </h1>
+            <form class="formu1" action="/cadastro" method="POST">
+                <label id="lb">Nome</label>
+                <input required autofocus placeholder="Nome" type="text" name="nome">
+                <label id="lb">Email</label>
+                <input required placeholder="Email" type="email" name="email">
+                <label id="lb">Senha</label>
+                <input  required placeholder="Senha" type="password" name="senha">
+                <label id="lb">Repita a Senha</label>
+                <input required type="password" name="senha2" placeholder="Senha">
+                <button id="btn" type="submit">Cadastrar</button>
+            </form>
+        </div>
+        </div>
+</body>
