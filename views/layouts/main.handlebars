@@ -17,22 +17,34 @@
 </head>
 
 <body>
+    {{>_msg}}
+
     <div class="top-nav">
         <nav class="icons1">
 
             <a href=""><i class="fab fa-instagram fa-2x"></i></a>
             <a href=""><i class="fab fa-facebook fa-2x"></i></a>
             <a href=""><i class="fab fa-youtube fa-2x"></i></a>
-            <a href="">Home</a>
-            <a href="">Campeonatos</a>
-            <a href="">Planos</a>
+            <a href="/home">Home</a>
+            <a href="/camps">Campeonatos</a>
+            <a href="/">Planos</a>
             <a href="/login">Login</a>
+            <a href="/cadastro">Cadastrar</a>
 
 
 
         </nav>
 
+
+
+    
     </div>
+
+    {{#if error}}
+    <div class =  "alert-alert-danger">{{error}}</div>
+    {{else}}
+
+    {{/if}}
     {{{body}}}
 </body>
 

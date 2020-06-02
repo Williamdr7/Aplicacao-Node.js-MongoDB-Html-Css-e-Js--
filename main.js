@@ -9,38 +9,15 @@ const Schema = mongoose.Schema();
 const bcrypt = require("bcryptjs");
 const flash = require('connect-flash');
 const session = require("express-session")
-
-//Banco
-mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://localhost:27017/fortcampdb", {
-    useNewUrlParser: true
-}).then(() => {
-    console.log("Deu bom!")
-}).catch((error) => {
-    console.log("Deu ruim: " + error)
-})
-var cad = new mongoose.Schema({
-    date: {
-        type: Date,
-        default: Date.now()
-    },
-    name: {
-        type: String,
-        require: true
-    },
-    email: {
-        type: String,
-        require: true
-    },
-    password: {
-        type: String,
-        require: true
-    }
-})
+const passport = require("passport")
+require("./models/cadastro")
+const cadastro = mongoose.model("cadastro")
+const localStrategy = require("passport-local").Strategy;
+const { compra } = require("./helper/compra")
 
 
-var cadastro = mongoose.model('cadastro', cad)
-    //Configurações
+
+//Configurações
 app.engine("handlebars", handlebars({ defaultLayout: "main" }))
 app.set('view engine', 'handlebars');
 app.use(express.static(path.join(__dirname, "public")));
@@ -51,10 +28,15 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(flash());
+
 app.use((req, res, next) => {
     res.locals.success_msg = req.flash("success_msg")
     res.locals.error_msg = req.flash("error_msg")
+    res.locals.error = req.flash("error")
+    res.locals.user = req.user || null
     next();
 })
 
@@ -62,14 +44,17 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     next();
 })
-app.get("/", (req, res) => {
+app.get("/home", (req, res) => {
     res.render('principal')
 })
-app.get('/cadastro', (req, res, next) => {
+app.get('/cadastro', (req, res, ) => {
+    res.render('formulario')
+})
+app.get("/cad", (req, res) => {
     res.render('formulario')
 })
 
-app.post("/cadastro", (req, res) => {
+app.post("/cadastro", (req, res, next) => {
 
     var erros = [];
     if (!req.body.nome || req.body.nome == null) {
@@ -87,29 +72,27 @@ app.post("/cadastro", (req, res) => {
     if (req.body.senha.length <= 4 && req.body.senha.length > 0) {
         erros.push({ texto: "Senha Muito Curta" })
     }
-    if (erros.length > 0) {
-        res.render('formulario', { erros: erros })
-    } else {
-        cadastro.findOne({ email: req.body.email }).then((usuario) => {
-            if (usuario) {
-                req.flash("error_msg", "Esse email ja está cadastrado em nosso sistema, tente outro email")
-                res.render("formulario")
-            } else {
-                var novoUsuario = new cadastro({
-                    name: req.body.name,
-                    email: req.body.email,
-                    password: req.body.password
-                })
-            }
-
+    cadastro.findOne({ email: req.body.email }, (erro, usuario) => {
+        if (usuario) {
+            erros.push({ texto: "Email ja cadastrado no nosso sistema, tente outro" })
+        }
+        if (erros.length > 0) {
+            res.render('formulario', { erros: erros })
+        } else {
+            var novoUsuario = new cadastro({
+                name: req.body.name,
+                email: req.body.email,
+                senha: req.body.senha
+            })
 
             bcrypt.genSalt(10, (erro, salt) => {
-                bcrypt.hash(req.body.senha, salt, (error, hash) => {
+                bcrypt.hash(novoUsuario.senha, salt, (error, hash) => {
                     if (error) {
                         req.flash("error_msg", "Houve um erro ao salvar o Usuário")
                         res.redirect("/cadastro")
                     }
-                    req.body.senha = hash;
+
+                    novoUsuario.senha = hash;
 
                     novoUsuario.save().then(() => {
                         req.flash('success_msg', "Usuário criado com sucesso")
@@ -117,19 +100,15 @@ app.post("/cadastro", (req, res) => {
 
                     }).catch((error) => {
                         req.flash("error_msg", "Houve um erro ao criar o Usuário, tente novamente")
-                        res.redirect("/");
+                        res.redirect("/home");
                     })
+
                 })
             })
-
-        })
-    }
+        }
+    })
 })
-
-
-
-
-app.get("/butao", (req, res) => {
+app.get("/camps", compra, (req, res) => {
     res.render('camp')
 })
 
@@ -137,4 +116,45 @@ app.get("/butao", (req, res) => {
 app.get("/login", (req, res) => {
     res.render("login")
 })
+app.post("/login", (req, res, next) => {
+    passport.use(new localStrategy({ usernameField: 'email', passwordField: 'senha' }, (email, senha, done) => {
+        cadastro.findOne({ email: email }).then((user) => {
+            if (!user) {
+                return done(null, false, { message: "Essa conta não existe" });
+            }
+
+            bcrypt.compare(senha, user.senha).then((res) => {
+                if (res) {
+                    return done(null, user)
+                }
+                if (!res) {
+                    return done(null, false, { message: "Senha incorreta" })
+                }
+
+            });
+        })
+    }))
+
+
+
+    passport.serializeUser((user, done) => {
+        done(null, user.id)
+    })
+    passport.deserializeUser((id, done) => {
+        cadastro.findById(id, (err, user) => {
+            done(err, user)
+        })
+    })
+
+
+    passport.authenticate("local", {
+        successRedirect: "/home",
+        failureRedirect: "/login",
+        failureFlash: true
+    })(req, res, next)
+})
+
+
+
+
 app.listen(8089);
