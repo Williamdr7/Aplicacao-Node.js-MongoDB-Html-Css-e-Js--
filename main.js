@@ -11,7 +11,9 @@ const flash = require('connect-flash');
 const session = require("express-session")
 const passport = require("passport")
 require("./models/cadastro")
+require("./models/dadoscompra")
 const cadastro = mongoose.model("cadastro")
+const dadoscompra = mongoose.model('dadoscompra')
 const localStrategy = require("passport-local").Strategy;
 const { compra } = require("./helper/compra")
 
@@ -111,11 +113,30 @@ app.post("/cadastro", (req, res, next) => {
 app.get("/camps", compra, (req, res) => {
     res.render('camp')
 })
-
-
+app.get("/compra", (req, res) => {
+    res.render('compracamp1')
+})
+app.post("/compra", (req, res, next) => {
+    var novosDados = new dadoscompra({
+        email: req.body.email,
+        nick: req.body.nick,
+        nickduo: req.body.nickduo,
+        emailpaypal: req.body.emailpaypal
+    })
+    novosDados.save().then(() => {
+        console.log("salvo")
+        res.redirect("/finalizarcompra")
+    }).catch(() => {
+        req.flash("error_msg", "Erro ao salvar")
+    });
+})
+app.get("/finalizarcompra", (req, res, next) => {
+    res.render("finalizarcompra")
+})
 app.get("/login", (req, res) => {
     res.render("login")
 })
+
 app.post("/login", (req, res, next) => {
     passport.use(new localStrategy({ usernameField: 'email', passwordField: 'senha' }, (email, senha, done) => {
         cadastro.findOne({ email: email }).then((user) => {

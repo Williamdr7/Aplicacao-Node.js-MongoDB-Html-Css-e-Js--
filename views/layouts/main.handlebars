@@ -12,7 +12,8 @@
     <script src="https://kit.fontawesome.com/bb7b855664.js" crossorigin="anonymous"></script>
     <script src="https://www.paypal.com/sdk/js?client-id=sb"></script>
     <link rel="stylesheet" href="camp.css">
-     
+    <link rel="stylesheet" href="stylecompra.css">
+
 
 </head>
 
@@ -20,6 +21,12 @@
     {{>_msg}}
 
     <div class="top-nav">
+        <div class="logo">
+            <img src="../../images/LogoFortCamp.png" alt="">
+            <a href="/camps">
+                <h1>Participe agora!</h1>
+            </a>
+        </div>
         <nav class="icons1">
 
             <a href=""><i class="fab fa-instagram fa-2x"></i></a>
@@ -27,25 +34,24 @@
             <a href=""><i class="fab fa-youtube fa-2x"></i></a>
             <a href="/home">Home</a>
             <a href="/camps">Campeonatos</a>
-            <a href="/">Planos</a>
             <a href="/login">Login</a>
-            <a href="/cadastro">Cadastrar</a>
-
-
 
         </nav>
 
 
 
-    
+
     </div>
 
     {{#if error}}
-    <div class =  "alert-alert-danger">{{error}}</div>
+    <div class="alert-alert-danger">{{error}}</div>
     {{else}}
 
     {{/if}}
     {{{body}}}
+    <div id="fim">
+        <p>Equipe FortCamp - 2020</p>
+    </div>
 </body>
 
 </html>

@@ -1,16 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
-.icons1 {
-    width: 900px;
-    display: flex;
-    justify-content: space-between;
-    margin: auto;
-    position: relative;
+.top-nav h1 {
+    width: 400px;
+    font-family: Anton;
+    color: white;
+    margin: 10px auto;
+    font-size: 50px;
 }
 
 .top-nav a {
     color: white;
     font-size: 30px;
     font-family: Anton;
+    margin-top: 20px;
 }
 
 .top-nav a:hover {
@@ -18,20 +19,31 @@
     text-decoration: none;
 }
 
+.icons1 {
+    display: flex;
+    width: 1000px;
+    text-align: end;
+    justify-content: space-between;
+    padding: 100px;
+}
+
 .top-nav {
+    display: flex;
     top: 0;
     padding: 20px;
     width: auto;
-    height: 100px;
-    background-color: rgb(241, 104, 13);
+    height: 120px;
+    background-color: rgb(85, 85, 84);
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-evenly;
     color: white;
     position: sticky;
 }
 
 #fim {
-    margin-top: 300px;
+    width: 200px;
+    margin: 300px auto auto auto;
+    font-family: Anton;
 }
 
 #fortcamp {
@@ -78,4 +90,14 @@
     text-decoration: none;
     color: #4D4DFF;
     cursor: pointer;
+}
+
+.logo {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.logo img {
+    width: 220px;
+    height: 120px;
 }
