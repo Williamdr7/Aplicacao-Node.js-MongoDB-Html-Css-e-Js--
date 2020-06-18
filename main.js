@@ -41,7 +41,6 @@ app.use((req, res, next) => {
     res.locals.user = req.user || null
     next();
 })
-
 //Rotas
 app.use((req, res, next) => {
     next();
@@ -174,8 +173,6 @@ app.post("/login", (req, res, next) => {
         failureFlash: true
     })(req, res, next)
 })
-
-
 
 
 app.listen(8089);

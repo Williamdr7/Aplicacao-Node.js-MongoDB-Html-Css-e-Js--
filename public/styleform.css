@@ -41,7 +41,7 @@
 
 #btn:hover {
     text-decoration: none;
-    color: rgb(241, 104, 13);
+    color: #09b9ff;
     cursor: pointer;
 }
 
@@ -56,7 +56,7 @@
     padding: 30px;
     justify-content: space-between;
     margin: 150px auto auto auto;
-    background-color: rgb(241, 104, 13);
+    background-color: rgb(34, 117, 212);
 }
 
 .container2 {
@@ -69,10 +69,25 @@
     border-radius: 15px;
     padding: 30px;
     justify-content: space-between;
-    margin: 150px auto auto auto;
-    background-color: rgb(241, 104, 13);
+    margin: auto auto auto auto;
+    background-color: rgb(34, 117, 212);
 }
-
+.container2{
+    animation: move 500ms;
+}
+.container1{
+    animation: move 500ms;
+}
+@keyframes move{
+    from{
+        opacity: 0;
+        transform: translateX(-35%);
+    }
+    to{
+        opacity: 1;
+        transform: translateX(0);
+    }
+}   
 .formu1 label {
     font-family: Anton;
     font-size: 30px;
@@ -87,10 +102,11 @@
 }
 
 .page1 {
-    background-color: rgb(46, 39, 39);
-    width: auto;
-    height: auto;
+    background-color: #09b9ff;
+    width: 1920px;
+    height: 1280px;
     text-align: center;
     align-items: center;
     margin: auto auto auto auto;
+    padding-top: 150px;
 }
